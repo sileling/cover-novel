@@ -1,0 +1,94 @@
+{
+  "name": "cover-novel",
+  "displayName": "Cover Novel",
+  "description": "代码注释阅读器 - 将小说隐藏在代码注释中阅读",
+  "version": "0.1.0",
+  "publisher": "ling",
+  "icon": "logo.png",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "keywords": [
+    "novel",
+    "reading",
+    "vscode-extension"
+  ],
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "covernovel.openNovel",
+        "title": "Cover Novel: 打开小说"
+      },
+      {
+        "command": "covernovel.nextpage",
+        "title": "Cover Novel: 下一页"
+      },
+      {
+        "command": "covernovel.prevpage",
+        "title": "Cover Novel: 上一页"
+      },
+      {
+        "command": "covernovel.jumppage",
+        "title": "Cover Novel: 跳页"
+      },
+      {
+        "command": "covernovel.bossKey",
+        "title": "Cover Novel: 老板键（隐藏/恢复）"
+      },
+      {
+        "command": "covernovel.switchBook",
+        "title": "Cover Novel: 切换书籍"
+      },
+      {
+        "command": "covernovel.chapterNav",
+        "title": "Cover Novel: 章节导航"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "covernovel.openNovel",
+        "key": "ctrl+alt+,",
+        "mac": "cmd+alt+,"
+      },
+      {
+        "command": "covernovel.nextpage",
+        "key": "alt+right"
+      },
+      {
+        "command": "covernovel.prevpage",
+        "key": "alt+left"
+      },
+      {
+        "command": "covernovel.bossKey",
+        "key": "alt+q"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "node esbuild.config.js",
+    "watch": "node esbuild.config.js --watch",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.60.0",
+    "esbuild": "^0.19.0",
+    "sharp": "^0.35.2",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "iconv-lite": "^0.6.3",
+    "jschardet": "^3.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  }
+}

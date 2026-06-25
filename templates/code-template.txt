@@ -1,0 +1,244 @@
+// {0}
+// {1}
+const vscode = require('vscode');
+
+// {2}
+// {3}
+
+function activate(context) {
+    // {4}
+    // {5}
+    console.log('extension activated');
+
+    // {6}
+    // {7}
+    // {8}
+    let disposable = vscode.commands.registerCommand('extension.hello', function () {
+        // {9}
+        vscode.window.showInformationMessage('Hello World!');
+    });
+
+    context.subscriptions.push(disposable);
+}
+
+// {10}
+// {11}
+
+function deactivate() {}
+
+// {12}
+// {13}
+
+function activate(context) {
+    // {14}
+    // {15}
+    console.log('extension activated');
+
+    // {16}
+    // {17}
+    // {18}
+    let disposable = vscode.commands.registerCommand('extension.hello', function () {
+        // {19}
+        vscode.window.showInformationMessage('Hello World!');
+    });
+
+    context.subscriptions.push(disposable);
+}
+
+// {20}
+// {21}
+
+function deactivate() {}
+
+// {22}
+// {23}
+
+function activate(context) {
+    // {24}
+    // {25}
+    console.log('extension activated');
+
+    // {26}
+    // {27}
+    // {28}
+    let disposable = vscode.commands.registerCommand('extension.hello', function () {
+        // {29}
+        vscode.window.showInformationMessage('Hello World!');
+    });
+
+    context.subscriptions.push(disposable);
+}
+
+// {30}
+// {31}
+
+function deactivate() {}
+
+// {32}
+// {33}
+
+const path = require('path');
+
+// {34}
+// {35}
+
+function activate(context) {
+    // {36}
+    // {37}
+    console.log('extension activated');
+
+    // {38}
+    // {39}
+    // {40}
+    let disposable = vscode.commands.registerCommand('extension.hello', function () {
+        // {41}
+        vscode.window.showInformationMessage('Hello World!');
+    });
+
+    context.subscriptions.push(disposable);
+}
+
+// {42}
+// {43}
+
+function deactivate() {}
+
+// {44}
+// {45}
+
+function activate(context) {
+    // {46}
+    // {47}
+    console.log('extension activated');
+
+    // {48}
+    // {49}
+    // {50}
+    let disposable = vscode.commands.registerCommand('extension.hello', function () {
+        // {51}
+        vscode.window.showInformationMessage('Hello World!');
+    });
+
+    context.subscriptions.push(disposable);
+}
+
+// {52}
+// {53}
+
+function deactivate() {}
+
+// {54}
+// {55}
+
+function activate(context) {
+    // {56}
+    // {57}
+    console.log('extension activated');
+
+    // {58}
+    // {59}
+    // {60}
+    let disposable = vscode.commands.registerCommand('extension.hello', function () {
+        // {61}
+        vscode.window.showInformationMessage('Hello World!');
+    });
+
+    context.subscriptions.push(disposable);
+}
+
+// {62}
+// {63}
+
+function deactivate() {}
+
+// {64}
+// {65}
+
+const fs = require('fs');
+
+// {66}
+// {67}
+
+function activate(context) {
+    // {68}
+    // {69}
+    console.log('extension activated');
+
+    // {70}
+    // {71}
+    // {72}
+    let disposable = vscode.commands.registerCommand('extension.hello', function () {
+        // {73}
+        vscode.window.showInformationMessage('Hello World!');
+    });
+
+    context.subscriptions.push(disposable);
+}
+
+// {74}
+// {75}
+
+function deactivate() {}
+
+// {76}
+// {77}
+
+function activate(context) {
+    // {78}
+    // {79}
+    console.log('extension activated');
+
+    // {80}
+    // {81}
+    // {82}
+    let disposable = vscode.commands.registerCommand('extension.hello', function () {
+        // {83}
+        vscode.window.showInformationMessage('Hello World!');
+    });
+
+    context.subscriptions.push(disposable);
+}
+
+// {84}
+// {85}
+
+function deactivate() {}
+
+// {86}
+// {87}
+
+function activate(context) {
+    // {88}
+    // {89}
+    console.log('extension activated');
+
+    // {90}
+    // {91}
+    // {92}
+    let disposable = vscode.commands.registerCommand('extension.hello', function () {
+        // {93}
+        vscode.window.showInformationMessage('Hello World!');
+    });
+
+    context.subscriptions.push(disposable);
+}
+
+// {94}
+// {95}
+
+function deactivate() {}
+
+// {96}
+// {97}
+
+function activate(context) {
+    // {98}
+    // {99}
+    console.log('extension activated');
+
+    let disposable = vscode.commands.registerCommand('extension.hello', function () {
+        vscode.window.showInformationMessage('Hello World!');
+    });
+
+    context.subscriptions.push(disposable);
+}
