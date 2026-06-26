@@ -1,8 +1,8 @@
 {
   "name": "cover-novel",
   "displayName": "Cover Novel",
-  "description": "代码注释阅读器 - 将小说隐藏在代码注释中阅读",
-  "version": "0.1.0",
+  "description": "Cover Novel - Hide novels in code comments for stealthy reading",
+  "version": "0.1.2",
   "publisher": "lingahri",
   "icon": "logo.png",
   "engines": {

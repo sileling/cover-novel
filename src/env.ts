@@ -30,9 +30,9 @@ export class EnvManager {
   }
 
   /** 保存到 globalState */
-  save(): void {
+  async save(): Promise<void> {
     try {
-      this.storage.update(STORAGE_KEY, this.data);
+      await this.storage.update(STORAGE_KEY, this.data);
     } catch (err) {
       console.error('[Cover Novel] 保存进度失败:', err);
     }

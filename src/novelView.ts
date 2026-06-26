@@ -51,8 +51,10 @@ export class NovelViewManager {
   /** 打开 novel.js 在编辑器中 */
   async openNovel(): Promise<void> {
     const uri = vscode.Uri.file(this.novelPath);
-    await vscode.window.showTextDocument(uri, {
+    const doc = await vscode.workspace.openTextDocument(uri);
+    await vscode.window.showTextDocument(doc, {
       viewColumn: vscode.ViewColumn.One,
+      preserveFocus: false,
     });
   }
 
