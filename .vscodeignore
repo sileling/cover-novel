@@ -8,3 +8,4 @@ src/**
 tsconfig.json
 esbuild.config.js
 *.vsix
+dist/env.json

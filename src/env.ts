@@ -1,45 +1,63 @@
 import * as fs from 'fs';
-import * as path from 'path';
+import * as vscode from 'vscode';
 import type { EnvData } from './types';
 
+const STORAGE_KEY = 'coverNovelEnv';
+
 /**
- * EnvManager — 负责读写 env.json，管理阅读进度持久化。
+ * EnvManager — 使用 VS Code globalState 管理阅读进度持久化。
+ * 数据随 VS Code 扩展生命周期管理，卸载后自动清除。
  */
 export class EnvManager {
-  private envPath: string;
+  private storage: vscode.Memento;
   private data: EnvData;
 
-  constructor(extensionPath: string) {
-    this.envPath = path.join(extensionPath, 'env.json');
+  constructor(storage: vscode.Memento) {
+    this.storage = storage;
     this.data = this.load();
   }
 
-  /** 从磁盘加载 env.json，若不存在则返回默认值 */
+  /** 从 globalState 加载数据 */
   private load(): EnvData {
-    try {
-      const raw = fs.readFileSync(this.envPath, 'utf-8');
-      const parsed = JSON.parse(raw);
+    const saved = this.storage.get<EnvData>(STORAGE_KEY);
+    if (saved) {
       return {
-        recentBooks: parsed.recentBooks ?? {},
-        currentBook: parsed.currentBook ?? '',
+        recentBooks: saved.recentBooks ?? {},
+        currentBook: saved.currentBook ?? '',
       };
-    } catch {
-      return { recentBooks: {}, currentBook: '' };
     }
+    return { recentBooks: {}, currentBook: '' };
   }
 
-  /** 保存当前数据到磁盘 */
+  /** 保存到 globalState */
   save(): void {
     try {
-      fs.writeFileSync(this.envPath, JSON.stringify(this.data, null, 2), 'utf-8');
+      this.storage.update(STORAGE_KEY, this.data);
     } catch (err) {
       console.error('[Cover Novel] 保存进度失败:', err);
     }
   }
 
+  /** 清理已不存在的书籍记录 */
+  cleanStaleBooks(): void {
+    const keys = Object.keys(this.data.recentBooks);
+    let changed = false;
+    for (const key of keys) {
+      if (!fs.existsSync(key)) {
+        delete this.data.recentBooks[key];
+        if (this.data.currentBook === key) {
+          this.data.currentBook = '';
+        }
+        changed = true;
+      }
+    }
+    if (changed) {
+      this.save();
+    }
+  }
+
   /** 将文件加入最近列表（自动去重） */
   addRecentBook(fullPath: string): void {
-    // 确保路径格式统一（正斜杠）
     const normalized = fullPath.replace(/\\/g, '/');
     if (!this.data.recentBooks[normalized]) {
       this.data.recentBooks[normalized] = 1;

@@ -62,6 +62,7 @@ async function pickAndLoadBook(): Promise<void> {
   const filePath = result[0].fsPath;
   envManager.addRecentBook(filePath);
   loadBook(filePath);
+  await novelView.openNovel();
 }
 
 /** 尝试恢复上次阅读，如果文件不存在则隐藏状态栏等用户操作 */
@@ -81,7 +82,8 @@ function tryRestoreLastBook(): void {
 
 export function activate(context: vscode.ExtensionContext): void {
   try {
-    envManager = new EnvManager(extensionPath);
+    envManager = new EnvManager(context.globalState);
+    envManager.cleanStaleBooks();
     templateEngine = new TemplateEngine(templateDir);
     pageManager = new PageManager(envManager, templateEngine, extensionPath);
 
