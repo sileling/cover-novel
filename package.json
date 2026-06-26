@@ -3,7 +3,7 @@
   "displayName": "Cover Novel",
   "description": "代码注释阅读器 - 将小说隐藏在代码注释中阅读",
   "version": "0.1.0",
-  "publisher": "ling",
+  "publisher": "lingahri",
   "icon": "logo.png",
   "engines": {
     "vscode": "^1.60.0"
@@ -89,6 +89,6 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/sileling/cover-novel"
   }
 }
