@@ -1,11 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as iconv from 'iconv-lite';
-import * as jschardet from 'jschardet';
 import type { NovelState, ChapterInfo } from './types';
 import { LINES_PER_PAGE } from './types';
 import { EnvManager } from './env';
 import { TemplateEngine } from './template';
+import { readFileWithAutoEncoding } from './utils/encodingDetector';
 
 /**
  * PageManager — 管理分页逻辑、小说渲染和文件输出。
@@ -27,23 +26,10 @@ export class PageManager {
     };
   }
 
-  /** 读取文件并自动检测编码 */
-  private readFileWithAutoEncoding(filePath: string): string {
-    const raw = fs.readFileSync(filePath);
-    const detected = jschardet.detect(raw);
-    const encoding = detected?.encoding || 'utf-8';
-    try {
-      return iconv.decode(raw, encoding);
-    } catch {
-      // 如果指定编码解码失败，回退到 utf-8
-      return iconv.decode(raw, 'utf-8');
-    }
-  }
-
   /** 加载指定书籍文件 */
   loadBook(bookPath: string): void {
     try {
-      const content = this.readFileWithAutoEncoding(bookPath);
+      const content = readFileWithAutoEncoding(bookPath);
       this.state.novelLines = content.split('\n');
       this.state.totalPage = Math.ceil(this.state.novelLines.length / this.state.linesPerPage);
       this.chapters = this.scanChapters();
@@ -89,17 +75,24 @@ export class PageManager {
     return 0;
   }
 
-  /** 获取当前页的内容行数组 */
-  private getCurrentPageLines(): string[] {
-    const currentPage = this.env.getPage(this.env.getCurrentBookPath());
-    const start = (currentPage - 1) * this.state.linesPerPage;
-    const end = currentPage * this.state.linesPerPage;
+  /** 获取指定页的内容行数组 */
+  private getPageLines(page: number): string[] {
+    const start = (page - 1) * this.state.linesPerPage;
+    const end = page * this.state.linesPerPage;
     return this.state.novelLines.slice(start, end);
   }
 
+  /** 获取当前页的内容行数组 */
+  private getCurrentPageLines(): string[] {
+    const currentPage = this.env.getPage(this.env.getCurrentBookPath());
+    return this.getPageLines(currentPage);
+  }
+
   /** 渲染当前页并写入 novel.js */
-  render(): void {
-    const lines = this.getCurrentPageLines();
+  render(page?: number): void {
+    const lines = page !== undefined
+      ? this.getPageLines(page)
+      : this.getCurrentPageLines();
     const content = this.template.fill(lines);
     try {
       fs.writeFileSync(this.state.novelPath, content, 'utf-8');
@@ -113,8 +106,9 @@ export class PageManager {
     const book = this.env.getCurrentBookPath();
     const currentPage = this.env.getPage(book);
     if (currentPage < this.state.totalPage) {
-      this.env.setPage(book, currentPage + 1);
-      this.render();
+      const next = currentPage + 1;
+      this.env.setPage(book, next);
+      this.render(next);
       return true;
     }
     return false;
@@ -125,8 +119,9 @@ export class PageManager {
     const book = this.env.getCurrentBookPath();
     const currentPage = this.env.getPage(book);
     if (currentPage > 1) {
-      this.env.setPage(book, currentPage - 1);
-      this.render();
+      const prev = currentPage - 1;
+      this.env.setPage(book, prev);
+      this.render(prev);
       return true;
     }
     return false;
@@ -139,7 +134,7 @@ export class PageManager {
     }
     const book = this.env.getCurrentBookPath();
     this.env.setPage(book, page);
-    this.render();
+    this.render(page);
     return true;
   }
 

@@ -2,7 +2,7 @@
   "name": "cover-novel",
   "displayName": "Cover Novel",
   "description": "Cover Novel - Hide novels in code comments for stealthy reading",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "lingahri",
   "icon": "logo.png",
   "engines": {

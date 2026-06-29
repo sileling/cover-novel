@@ -58,6 +58,20 @@ export class NovelViewManager {
     });
   }
 
+  /** 检查 novel.js 标签页是否打开（不一定激活） */
+  isNovelOpen(): boolean {
+    const tabs = vscode.window.tabGroups.all;
+    for (const group of tabs) {
+      for (const tab of group.tabs) {
+        const input = tab.input as { uri?: vscode.Uri } | undefined;
+        if (input?.uri && this.isNovelFile(input.uri.fsPath)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   /** 关闭 novel.js 标签页 */
   async closeNovel(): Promise<void> {
     const tabs = vscode.window.tabGroups.all;

@@ -39,7 +39,7 @@ export class EnvManager {
   }
 
   /** 清理已不存在的书籍记录 */
-  cleanStaleBooks(): void {
+  async cleanStaleBooks(): Promise<void> {
     const keys = Object.keys(this.data.recentBooks);
     let changed = false;
     for (const key of keys) {
@@ -52,13 +52,18 @@ export class EnvManager {
       }
     }
     if (changed) {
-      this.save();
+      await this.save();
     }
+  }
+
+  /** 统一路径格式：反斜杠转正斜杠 */
+  private normalizePath(fullPath: string): string {
+    return fullPath.replace(/\\/g, '/');
   }
 
   /** 将文件加入最近列表（自动去重） */
   addRecentBook(fullPath: string): void {
-    const normalized = fullPath.replace(/\\/g, '/');
+    const normalized = this.normalizePath(fullPath);
     if (!this.data.recentBooks[normalized]) {
       this.data.recentBooks[normalized] = 1;
     }
@@ -82,17 +87,17 @@ export class EnvManager {
 
   /** 设置当前书籍 */
   setCurrentBook(fullPath: string): void {
-    this.data.currentBook = fullPath.replace(/\\/g, '/');
+    this.data.currentBook = this.normalizePath(fullPath);
   }
 
   /** 获取指定书籍的页码 */
   getPage(bookPath: string): number {
-    return this.data.recentBooks[bookPath] ?? 1;
+    return this.data.recentBooks[this.normalizePath(bookPath)] ?? 1;
   }
 
   /** 设置指定书籍的页码 */
   setPage(bookPath: string, page: number): void {
-    this.data.recentBooks[bookPath] = page;
+    this.data.recentBooks[this.normalizePath(bookPath)] = page;
   }
 
   /** 获取最近阅读的书籍路径列表 */
@@ -102,7 +107,7 @@ export class EnvManager {
 
   /** 从最近列表删除指定书籍 */
   removeBook(fullPath: string): void {
-    const normalized = fullPath.replace(/\\/g, '/');
+    const normalized = this.normalizePath(fullPath);
     delete this.data.recentBooks[normalized];
     if (this.data.currentBook === normalized) {
       this.data.currentBook = '';

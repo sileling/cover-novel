@@ -29,18 +29,38 @@ export class BossKeyManager {
 
   /** 隐藏 novel.js */
   private async hide(): Promise<void> {
-    if (!this.novelView.isNovelActive()) {
-      // novel.js 当前未激活，不响应老板键
+    if (!this.novelView.isNovelOpen()) {
+      // novel.js 标签页根本没打开，不响应老板键
       return;
     }
 
-    // 记录前一个编辑器（非 novel.js 的文件）
-    const editors = vscode.window.visibleTextEditors;
-    const nonNovelEditor = editors.find(
-      e => !this.novelView.isNovelFile(e.document.uri.fsPath),
-    );
-    if (nonNovelEditor) {
-      this.state.previousEditorUri = nonNovelEditor.document.uri.fsPath;
+    // 记录前一个编辑器（用于关闭 novel.js 后恢复）
+    // 优先取同标签组里 novel.js 左边的标签，其次取其他可见编辑器
+    const activeGroup = vscode.window.tabGroups.activeTabGroup;
+    const activeTab = activeGroup?.activeTab;
+    const activeInput = activeTab?.input as { uri?: vscode.Uri } | undefined;
+    if (activeInput?.uri && !this.novelView.isNovelFile(activeInput.uri.fsPath)) {
+      // 当前活跃标签不是 novel.js → 直接用它
+      this.state.previousEditorUri = activeInput.uri.fsPath;
+    } else if (activeGroup && activeTab) {
+      // 当前活跃的是 novel.js → 找它左边的标签
+      const idx = activeGroup.tabs.indexOf(activeTab);
+      if (idx > 0) {
+        const leftInput = activeGroup.tabs[idx - 1].input as { uri?: vscode.Uri } | undefined;
+        if (leftInput?.uri) {
+          this.state.previousEditorUri = leftInput.uri.fsPath;
+        }
+      }
+      // 左边没有，fallback 到其他可见编辑器
+      if (!this.state.previousEditorUri) {
+        const editors = vscode.window.visibleTextEditors;
+        const nonNovelEditor = editors.find(
+          e => !this.novelView.isNovelFile(e.document.uri.fsPath),
+        );
+        if (nonNovelEditor) {
+          this.state.previousEditorUri = nonNovelEditor.document.uri.fsPath;
+        }
+      }
     }
 
     // 关闭 novel.js 标签
